@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="cs"
+      xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="robots" content="noindex">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="style.css" type="text/css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Montserrat|Raleway&amp;subset=latin-ext" rel="stylesheet">
+        <title>Java2 Web - Úkol 04</title>
+    </head>
+    <body>
+        <header>
+            <div class="header">
+                <h1>Úkol 04 - Bezdomovci</h1>
+                <p>část druhá - domácí úkol</p>
+            </div>
+            <nav class="navmenu">
+                <ul>
+                    <a href="index.html"><li>Hlavní stránka</li></a>
+                    <a href="prequel.html"><li>část první - výchozí projekt</li></a>
+                    <a href="sequel.html"><li>část druhá - domácí úkol</li></a>
+                </ul>
+            </nav>
+        </header>
+
+    <main>
+        <div class="step">
+            <p class="numbering">1</p>
+            <p>Vyjdu z projektu Bezdomovci, na kterém jsme pracovali v hodině. Zadání domácího úkolu je <a href="https://javabrno.czechitas.cz/2019-jaro/java2/lekce04-ukol.html">zde</a>. Výchozí projekt potřebuju změnit následujícím způsobem: </p>
+            <ul>
+                <li>umístit obrázky obličejů do formuláře</li>
+                <li>přidat každému obrázku dvě přepínací tlačítka (radiobuttony)</li>
+                <li>na konec formuláře přidat tlačítko na odeslání</li>
+                <li>výsledek nastylovat - s výchozím stylem prohlížeče už si teď nevystačíme</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <p class="numbering">2</p>
+            <ul>
+                <li>Již přítomný &lt;img&gt; na stránce index.html obalím tagem &lt;form&gt;, který z obsahu udělá formulář. Obvykle bychom k tagu dopisovali ještě atributy <i>action</i> a <i>method</i>, ale ty vzhled nijak neovlivňují a zatím se bez nich obejdu.
+            <pre>
+&lt;form&gt;
+
+    <span class="new">&lt;img th:each="oblicej :${obliceje}" th:src="'images/obliceje/' + ${oblicej}" src="../static/images/obliceje/man1.jpg"&gt;</span>
+
+&lt;/form&gt;
+
+</pre>
+                </li>
+                <li>Pod obrázek přidám &lt;div&gt; se třídou "radiobutton" (abych měla později jak je stylovat) a do něj 2x radiobutton. Radiobutton usí mít atribut type="radio" a atribut name, jehož hodnota je pro obě v páru tlačítka stejná. Použiju &lt;input&gt; jako párový tag a dovnitř umístím popisek tlačítek.
+                    <pre>
+&lt;form&gt;
+
+    <span class="old">&lt;img th:each="oblicej :${obliceje}" th:src="'images/obliceje/' + ${oblicej}" src="../static/images/obliceje/man1.jpg"&gt;</span>
+    <span class="new">&lt;div class="radiobuttons"&gt;</span>
+        <span class="new">&lt;input type="radio" name="odpoved"&gt;profesor&lt;/input&gt;</span>
+        <span class="new">&lt;input type="radio" name="odpoved"&gt;bezdomovec&lt;/input&gt;</span>
+    <span class="new">&lt;/div&gt;</span>
+
+&lt;/form&gt;
+</pre>
+                </li>
+                <li>Celý takto vzniklý útvar zabalím do &lt;div&gt; třídy "item" - při pozdějším stylování totiž určitě budu chtít, aby se tyhle tři části pohybovaly spolu a chovaly se (do jisté míry) jako jeden celek.
+                    <pre>
+&lt;form&gt;
+
+    <span class="new">&lt;div class="item"&gt;</span>
+        <span class="old">&lt;img th:each="oblicej :${obliceje}" th:src="'images/obliceje/' + ${oblicej}" src="../static/images/obliceje/man1.jpg"&gt;</span>
+        <span class="old">&lt;div class="radiobuttons"&gt;</span>
+            <span class="old">&lt;input type="radio" name="odpoved"&gt;profesor&lt;/input&gt;</span>
+            <span class="old">&lt;input type="radio" name="odpoved"&gt;bezdomovec&lt;/input&gt;</span>
+        <span class="old">&lt;/div&gt;</span>
+    <span class="new">&lt;/div&gt;</span>
+
+&lt;/form&gt;
+</pre>
+                </li>
+                <li>Kvůli předchozí změně struktury potřebuju upravit atribut <i>th:each</i> obrázku. Nechci, aby se mi na dynamickém webu zobrazilo v jednom divu osm obrázků a za nimi dva radiobuttony. Chci, aby se mi osmkrát zobrazila celá položka - obrázek a radiobuttony. <i>Th:each</i> tedy přesunu k divu třídy "item".
+                    <pre>
+&lt;form&gt;
+
+    &lt;div class="item" <span class="new">th:each="oblicej :${obliceje}"</span>&gt;
+        &lt;img <span class="new"><del>th:each="oblicej :${obliceje}"</del></span> th:src="'images/obliceje/' + ${oblicej}" src="../static/images/obliceje/man1.jpg"&gt;
+        <span class="old">&lt;div class="radiobuttons"&gt;</span>
+            <span class="old">&lt;input type="radio" name="odpoved"&gt;profesor&lt;/input&gt;</span>
+            <span class="old">&lt;input type="radio" name="odpoved"&gt;bezdomovec&lt;/input&gt;</span>
+        <span class="old">&lt;/div&gt;</span>
+    <span class="old">&lt;/div&gt;</span>
+
+&lt;/form&gt;
+</pre>
+                </li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <p class="numbering">3</p>
+            <p>Právě vytvořenou položku dvakrát zkopíruju - chci mít na statickém webu celkem tři položky, abych pak dobře viděla veškeré změny ve stylování, včetně okrajů, mezer mezi obrázky, celkového vzhledu stránky, atd. Druhá a třetí položka mají smysl pouze na statickém webu, takže bude nutné dle toho upravit th atributy.</p>
+            <ul>
+                <li>Kopírování položky poprvé. Vnější div v dynamickém webu nechci opakovat, ale naopak chci, aby zmizel (koneckonců je tu jen pro účely testování a stylování) - vyměním <i>th:each</i> za <i>th:remove</i>.
+                    <pre>
+&lt;form&gt;
+
+    &lt;div class="item" th:each="oblicej :${obliceje}"&gt;
+        &lt;img th:src="'images/obliceje/' + ${oblicej}" src="../static/images/obliceje/man1.jpg"&gt;
+        <span class="old">&lt;div class="radiobuttons"&gt;</span>
+            <span class="old">&lt;input type="radio" name="odpoved"&gt;profesor&lt;/input&gt;</span>
+            <span class="old">&lt;input type="radio" name="odpoved"&gt;bezdomovec&lt;/input&gt;</span>
+        <span class="old">&lt;/div&gt;</span>
+    <span class="old">&lt;/div&gt;</span>
+
+   <span class="new"> &lt;div class="item" <del>th:each="oblicej :${obliceje}"</del> th:remove="all"&gt;
+        &lt;img th:src="'images/obliceje/' + ${oblicej}" src="../static/images/obliceje/man1.jpg"&gt;
+        &lt;div class="radiobuttons"&gt;</span>
+            <span class="new">&lt;input type="radio" name="odpoved"&gt;profesor&lt;/input&gt;</span>
+            <span class="new">&lt;input type="radio" name="odpoved"&gt;bezdomovec&lt;/input&gt;</span>
+        <span class="new">&lt;/div&gt;</span>
+    <span class="new">&lt;/div&gt;</span>
+
+&lt;/form&gt;
+</pre>
+                </li>
+                <li>Změním druhé položce statickou adresu obrázku. Dynamickou adresu nepotřebuju, protože předchozím krokem jsem zařídili, že se druhá položka při běhu na serveru kompletně odstraní.
+                    <pre>
+&lt;form&gt;
+
+    &lt;div class="item" th:each="oblicej :${obliceje}"&gt;
+        &lt;img th:src="'images/obliceje/' + ${oblicej}" src="../static/images/obliceje/man1.jpg"&gt;
+        <span class="old">&lt;div class="radiobuttons"&gt;</span>
+            <span class="old">&lt;input type="radio" name="odpoved"&gt;profesor&lt;/input&gt;</span>
+            <span class="old">&lt;input type="radio" name="odpoved"&gt;bezdomovec&lt;/input&gt;</span>
+        <span class="old">&lt;/div&gt;</span>
+    <span class="old">&lt;/div&gt;</span>
+
+    &lt;div class="item" th:remove="all"&gt;
+        &lt;img <span class="new"><del>th:src="'images/obliceje/' + ${oblicej}"</del></span> src="../static/images/obliceje/<span class="new"><del>man1.jpg</del>man2.jpg</span>"&gt;
+        &lt;div class="radiobuttons"&gt;
+            <span class="old">&lt;input type="radio" name="odpoved"&gt;profesor&lt;/input&gt;</span>
+            <span class="old">&lt;input type="radio" name="odpoved"&gt;bezdomovec&lt;/input&gt;</span>
+        <span class="old">&lt;/div&gt;</span>
+    &lt;/div&gt;
+
+&lt;/form&gt;
+</pre>
+
+                </li>
+                <li>Dále musím změnit atributy <i>name</i> u radiobuttonů. Teď mají všechny stejné jméno, takže patří do stejné skupiny a lze aktivovat vždy jen jedno ze čtyř tlačítek (namísto jedno ze dvou pod každým obrázkem).
+                    <pre>
+&lt;form&gt;
+
+    &lt;div class="item" th:each="oblicej :${obliceje}"&gt;
+        &lt;img th:src="'images/obliceje/' + ${oblicej}" src="../static/images/obliceje/man1.jpg"&gt;
+        <span class="old">&lt;div class="radiobuttons"&gt;</span>
+            &lt;input type="radio" name="odpoved<span class="new">1</span>"&gt;profesor&lt;/input&gt;
+            &lt;input type="radio" name="odpoved<span class="new">1</span>"&gt;bezdomovec&lt;/input&gt;
+        <span class="old">&lt;/div&gt;</span>
+    <span class="old">&lt;/div&gt;</span>
+
+    &lt;div class="item" th:remove="all"&gt;
+        &lt;img src="../static/images/obliceje/man2.jpg"&gt;
+        &lt;div class="radiobuttons"&gt;
+            &lt;input type="radio" name="odpoved<span class="new">2</span>"&gt;profesor&lt;/input&gt;
+            &lt;input type="radio" name="odpoved<span class="new">2</span>"&gt;bezdomovec&lt;/input&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+&lt;/form&gt;
+</pre>
+                </li>
+                <li>Zkopíruju druhou položku a vyrobím z ní třetí. Bude mít unikátní zdroj obrázku a unikátní atribut <i>name</i>.
+                    <pre>
+&lt;form&gt;
+
+    &lt;div class="item" th:each="oblicej :${obliceje}"&gt;
+        &lt;img th:src="'images/obliceje/' + ${oblicej}" src="../static/images/obliceje/man1.jpg"&gt;
+        &lt;div class="radiobuttons"&gt;
+            &lt;input type="radio" name="odpoved1"&gt;profesor&lt;/input&gt;
+            &lt;input type="radio" name="odpoved1"&gt;bezdomovec&lt;/input&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class="item" th:remove="all"&gt;
+        &lt;img src="../static/images/obliceje/man2.jpg"&gt;
+        &lt;div class="radiobuttons"&gt;
+            &lt;input type="radio" name="odpoved2"&gt;profesor&lt;/input&gt;
+            &lt;input type="radio" name="odpoved2"&gt;bezdomovec&lt;/input&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    <span class="new">&lt;div class="item" th:remove="all"&gt;
+        &lt;img src="../static/images/obliceje/man3.jpg"&gt;
+        &lt;div class="radiobuttons"&gt;
+            &lt;input type="radio" name="odpoved3"&gt;profesor&lt;/input&gt;
+            &lt;input type="radio" name="odpoved3"&gt;bezdomovec&lt;/input&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;</span>
+
+&lt;/form&gt;
+</pre>
+                </li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <p class="numbering">4</p>
+            <p>Na konec formuláře přidám tlačítko "Odeslat"; z různých možností použiju input. Obalím ho divem s vlastní třídou "submit".</p>
+<pre>
+&lt;form&gt;
+
+    &lt;div class="item" th:each="oblicej :${obliceje}"&gt;
+        &lt;img th:src="'images/obliceje/' + ${oblicej}" src="../static/images/obliceje/man1.jpg"&gt;
+        &lt;div class="radiobuttons"&gt;
+            &lt;input type="radio" name="odpoved1"&gt;profesor&lt;/input&gt;
+            &lt;input type="radio" name="odpoved1"&gt;bezdomovec&lt;/input&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class="item" th:remove="all"&gt;
+        &lt;img src="../static/images/obliceje/man2.jpg"&gt;
+        &lt;div class="radiobuttons"&gt;
+            &lt;input type="radio" name="odpoved2"&gt;profesor&lt;/input&gt;
+            &lt;input type="radio" name="odpoved2"&gt;bezdomovec&lt;/input&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class="item" th:remove="all"&gt;
+        &lt;img src="../static/images/obliceje/man3.jpg"&gt;
+        &lt;div class="radiobuttons"&gt;
+            &lt;input type="radio" name="odpoved3"&gt;profesor&lt;/input&gt;
+            &lt;input type="radio" name="odpoved3"&gt;bezdomovec&lt;/input&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    <span class="new">&lt;div class="submit"&gt;
+        &lt;input type="submit" value="Odeslat" /&gt;
+    &lt;/div&gt;</span>
+
+&lt;/form&gt;
+</pre>
+        </div>
+
+        <div class="step">
+            <p class="numbering">5</p>
+            <p>Hurá na stylování. Jdu upravit soubor styly.css (ve kterém mám odminule smazané veškeré řádky, takže "upravit" možná není ten správný výraz).</p>
+            <p><strong>Doporučení, pokud s css ještě moc neumíte:</strong> Po každém kroku/přidání jednoho pravidla si obnovte stránku, ať hned vidíte, jaké změny konkrétní kousek kódu udělal.</p>
+            <ul>
+                <li>nepostradatelný základ
+<pre>
+<span class="new">* {
+    box-sizing: border-box;
+}</span>
+</pre>
+                </li>
+                <li>nadpis na střed, pod nadpisem trocha volného místa
+<pre>
+<span class="old">* {
+    box-sizing: border-box;
+}</span>
+
+<span class="new">h1 {
+    margin-bottom: 40px;
+    text-align: center;
+}</span>
+</pre>
+                </li>
+                <li>Nastavím šířku položky. Dočasně přidám žluté pozadí, aby mi při stylování pomáhalo vidět hranice prvku.
+                    <pre>
+<span class="old">* {
+    box-sizing: border-box;
+}</span>
+
+<span class="old">h1 {
+    margin-bottom: 40px;
+    text-align: center;
+}</span>
+
+<span class="new">.item {
+    background: yellow;
+    width: 300px;
+}</span>
+</pre>
+                </li>
+                <li>Velikost obrázku momentálně přesahuje velikost celé položky. Zavelím obrázkům, aby měly šířku o stejné hodnotě jako 100 % šířky kontejneru, ve kterém jsou.
+                    <pre>
+<span class="old">* {
+    box-sizing: border-box;
+}</span>
+
+<span class="old">h1 {
+    margin-bottom: 40px;
+    text-align: center;
+}</span>
+
+<span class="old">.item {
+    background: yellow;
+    width: 300px;
+}</span>
+
+<span class="new">.item img {
+    width: 100%;
+}
+</span>
+</pre>
+                </li>
+                <li>Zarovnám položky na střed stránky. Využiju k tomu margin: auto. Navíc nastavím položkám volné místo u horního a spodního okraje.
+                    <pre>
+<span class="old">* {
+    box-sizing: border-box;
+}</span>
+
+<span class="old">h1 {
+    margin-bottom: 40px;
+    text-align: center;
+}</span>
+
+<span class="old">.item {
+    background: yellow;
+    width: 300px;</span>
+    <span class="new">margin: 20px auto;</span>
+<span class="old">}</span>
+
+<span class="old">.item img {
+    width: 100%;
+}
+</span>
+</pre>
+                    <p>Všimněte si, že svislá mezera mezi dvěma položkami je pouze 20 px, i když by "správně" měla být 40 px (20 px spodní okraj jedné + 20 px horní okraj další). Může za to <em>margin collapse</em>, což je jev, který se u některých prvků uplatňuje a u některých zase ne. Pravidla k dohledání např. <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Box_Model/Mastering_margin_collapsing" target="_blank">zde (otevře se v novém okně)</a>. Pro naše potřeby asi stačí vědět, že něco takového existuje - když budete mít někde okraje dvakrát menší, než jste chtěli, tak budete mít aspoň tušení, kde by mohl být problém a příslušný okraj si promptně napíšete větší. :)</p>
+                </li>
+                <li>Vycentruju radiobuttony pod obrázkem a udělám jim trochu místa. Dočasně obarvím jejich div pro potřeby stylování.
+                    <pre>
+<span class="old">* {
+    box-sizing: border-box;
+}</span>
+
+<span class="old">h1 {
+    margin-bottom: 40px;
+    text-align: center;
+}</span>
+
+<span class="old">.item {
+    background: yellow;
+    width: 300px;
+    margin: 20px auto;
+}</span>
+
+<span class="old">.item img {
+    width: 100%;
+}</span>
+
+<span class="new">.radiobuttons {
+    background: mediumpurple;
+    padding: 10px;
+    text-align: center;
+}</span>
+</pre>
+                </li>
+                <li>Radiobuttony se mi zdají moc namáčknuté na sebe. Chci mezi nimi větší mezeru - přidám jim větší levý okraj.
+                    <pre>
+<span class="old">* {
+    box-sizing: border-box;
+}</span>
+
+<span class="old">h1 {
+    margin-bottom: 40px;
+    text-align: center;
+}</span>
+
+<span class="old">.item {
+    background: yellow;
+    width: 300px;
+    margin: 20px auto;
+}</span>
+
+<span class="old">.item img {
+    width: 100%;
+}</span>
+
+<span class="old">.radiobuttons {
+    background: mediumpurple;
+    padding: 10px;
+    text-align: center;
+}</span>
+
+<span class="new">.radiobuttons input {
+    margin-left: 20px;
+}</span>
+</pre>
+                </li>
+                <li>Mezi obrázkem a divem s radiobuttony je malinká mezera. Odstraním ji tím, že z obrázku - původně řádkového elementu - udělám element blokový.
+                    <pre>
+<span class="old">* {
+    box-sizing: border-box;
+}</span>
+
+<span class="old">h1 {
+    margin-bottom: 40px;
+    text-align: center;
+}</span>
+
+<span class="old">.item {
+    background: yellow;
+    width: 300px;
+    margin: 20px auto;
+}</span>
+
+<span class="old">.item img {
+    width: 100%;</span>
+    <span class="new">display: block;</span>
+<span class="old">}</span>
+
+<span class="old">.radiobuttons {
+    background: mediumpurple;
+    padding: 10px;
+    text-align: center;
+}</span>
+
+<span class="old">.radiobuttons input {
+    margin-left: 20px;
+}</span>
+</pre>
+                </li>
+                <li>Zarámuju každou položku
+                    <pre>
+* {
+    box-sizing: border-box;
+}
+
+h1 {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.item {
+    background: yellow;
+    width: 300px;
+    margin: 20px auto;
+    <span class="new">border: 3px solid black;</span>
+}
+
+.item img {
+    width: 100%;
+    display: block;
+}
+
+.radiobuttons {
+    background: mediumpurple;
+    padding: 10px;
+    text-align: center;
+}
+
+.radiobuttons input {
+    margin-left: 20px;
+}
+</pre>
+                </li>
+                <li>Vedena snahou o odlehčení, odsadím obrázek od rámečku.
+                    <pre>
+* {
+    box-sizing: border-box;
+}
+
+h1 {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.item {
+    background: yellow;
+    width: 300px;
+    margin: 20px auto;
+    <span class="old">border: 3px solid black;</span>
+}
+
+.item img {
+    width: 100%;
+    display: block;
+    <span class="new">padding: 5px;</span>
+}
+
+.radiobuttons {
+    background: mediumpurple;
+    padding: 10px;
+    text-align: center;
+}
+
+.radiobuttons input {
+    margin-left: 20px;
+}
+</pre>
+                </li>
+                <li>Nastyluju div s tlačítkem Odeslat - bude mít stejnou šířku a okraje jako jednotlivé položky s obrázky.
+                    <pre>
+* {
+    box-sizing: border-box;
+}
+
+h1 {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.item {
+    background: yellow;
+    width: 300px;
+    margin: 20px auto;
+    <span class="old">border: 3px solid black;</span>
+}
+
+.item img {
+    width: 100%;
+    display: block;
+    <span class="old">padding: 5px;</span>
+}
+
+.radiobuttons {
+    background: mediumpurple;
+    padding: 10px;
+    text-align: center;
+}
+
+.radiobuttons input {
+    margin-left: 20px;
+}
+
+<span class="new">.submit {
+    width: 300px;
+    margin: 20px auto;
+    text-align: center;
+}</span>
+</pre>
+
+                </li>
+                <li>Roztáhnu tlačítko Odeslat přes celou šírku divu.
+                    <pre>
+* {
+    box-sizing: border-box;
+}
+
+h1 {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.item {
+    background: yellow;
+    width: 300px;
+    margin: 20px auto;
+    <span class="old">border: 3px solid black;</span>
+}
+
+.item img {
+    width: 100%;
+    display: block;
+    <span class="old">padding: 5px;</span>
+}
+
+.radiobuttons {
+    background: mediumpurple;
+    padding: 10px;
+    text-align: center;
+}
+
+.radiobuttons input {
+    margin-left: 20px;
+}
+
+<span class="old">.submit {
+    width: 300px;
+    margin: 20px auto;
+    text-align: center;
+}</span>
+
+<span class="new">.submit input {
+    width: 100%;
+}</span>
+</pre>
+                </li>
+                <li>Odstraním pomocné barvy pozadí.
+                    <pre>
+* {
+    box-sizing: border-box;
+}
+
+h1 {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.item {
+    <span class="new"><del>background: yellow;</del></span>
+    width: 300px;
+    margin: 20px auto;
+    <span class="old">border: 3px solid black;</span>
+}
+
+.item img {
+    width: 100%;
+    display: block;
+    <span class="old">padding: 5px;</span>
+}
+
+.radiobuttons {
+    <span class="new"><del>background: mediumpurple;</del></span>
+    padding: 10px;
+    text-align: center;
+}
+
+.radiobuttons input {
+    margin-left: 20px;
+}
+
+<span class="old">.submit {
+    width: 300px;
+    margin: 20px auto;
+    text-align: center;
+}</span>
+
+<span class="old">.submit input {
+    width: 100%;
+}</span>
+</pre>
+                </li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <p class="numbering">6</p>
+            <p>V první položce, kde pracujeme s th atributy, zbývá vyřešit ještě jednu věc - <i>name</i> atribut radiobuttonů. Potřebuju dynamicky generovat "odpoved1", "odpoved2", atd. Jedna možnost je připravit si tyto řetězce v Javě, a pak je předávat držáku na data. Já zvolím jinou možnost a budu potřebná čísla generovat přímo Thymeleafem.</p>
+            <p>Každý objekt předaný Thymeleafu skrze th:each má několik implicitních vlastností. Tyto vlastnosti se sdružují v objektu pojmenovaném objektStat (v mém případě tedy oblicejStat). Vlastnost <i>count</i> (oblicejStat.count) označuje pořadí současné iterace seznamu. Pro prvek na začátku seznamu je tedy oblicejStat.count roven jedné, prvek za ním má count 2, atd. Bližší vysvětlení <a href="https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#keeping-iteration-status">zde</a>.</p>
+            <p>V index.html upravím první položku formuláře.</p>
+            <pre>
+&lt;form&gt;
+
+    &lt;div class="item" th:each="oblicej :${obliceje}"&gt;
+        &lt;img th:src="'images/obliceje/' + ${oblicej}" src="../static/images/obliceje/man1.jpg"&gt;
+        &lt;div class="radiobuttons"&gt;
+            &lt;input type="radio" name="odpoved1 <span class="new">th:name="'odpoved' + ${oblicejStat.count}</span>"&gt;profesor&lt;/input&gt;
+            &lt;input type="radio" name="odpoved1 <span class="new">th:name="'odpoved' + ${oblicejStat.count}</span>"&gt;bezdomovec&lt;/input&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class="item" th:remove="all"&gt;
+        &lt;img src="../static/images/obliceje/man2.jpg"&gt;
+        &lt;div class="radiobuttons"&gt;
+            &lt;input type="radio" name="odpoved2"&gt;profesor&lt;/input&gt;
+            &lt;input type="radio" name="odpoved2"&gt;bezdomovec&lt;/input&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class="item" th:remove="all"&gt;
+        &lt;img src="../static/images/obliceje/man3.jpg"&gt;
+        &lt;div class="radiobuttons"&gt;
+            &lt;input type="radio" name="odpoved3"&gt;profesor&lt;/input&gt;
+            &lt;input type="radio" name="odpoved3"&gt;bezdomovec&lt;/input&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    <span class="old">&lt;div class="submit"&gt;
+        &lt;input type="submit" value="Odeslat" /&gt;
+    &lt;/div&gt;</span>
+
+&lt;/form&gt;
+</pre>
+        </div>
+
+        <div class="step">
+            <p class="numbering">7</p>
+            <p>V této fázi by měl být úkol hotov, funkční, po vytvoření .war spustitelný na Tomcatu.</p>
+            <figure>
+                <figcaption>Stránka po nastylování (začátek a konec)
+                </figcaption>
+                <img src="images/sequel_screen1.png" alt="Project result, page beginning">
+                <img src="images/sequel_screen2.png" alt="Project result, page end">
+            </figure>
+        </div>
+
+    </main>
+
+    <footer>
+        Dana Kutálková &copy; 2019
+    </footer>
+
+</body>
+</html>

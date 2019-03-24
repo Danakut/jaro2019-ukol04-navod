@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="cs"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="style.css" type="text/css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat|Raleway&amp;subset=latin-ext" rel="stylesheet">
+    <title>Java2 Web - Úkol 04</title>
+</head>
+<body>
+    <header>
+        <div class="header">
+            <h1>Úkol 04 - Bezdomovci</h1>
+            <p>část první - výchozí projekt</p>
+        </div>
+        <nav class="navmenu">
+            <ul>
+                <a href="index.html"><li>Hlavní stránka</li></a>
+                <a href="prequel.html"><li>část první - výchozí projekt</li></a>
+                <a href="sequel.html"><li>část druhá - domácí úkol</li></a>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="step">
+            <p class="numbering">1</p>
+            <p>Zakládám nový projekt zkopírováním Czechitas Web Template z první lekce. </p>
+            <ul>
+                <li>Přejmenuju příslušné parametry v pom.xml a application.properties.</li>
+                <li>Vymažu obsah styly.css.</li>
+                <li>Upravím &lt;title&gt; v hlavičce stránky index.html</li>
+                <li>Tamtéž upravím h1 nadpis.</li>
+                <li>Tamtéž odstraním div se třídou "page".</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <p class="numbering">2</p>
+            <p>Na stránku index.html přidám jeden &lt;img&gt; Každý obrázek potřebuje atribut src - píšu relativní cestu pro statický web.</p>
+<pre>
+<span class="new">&lt;img src="../static/images/obliceje/man1.jpg"&gt;</span>
+</pre>
+        </div>
+
+        <div class="step">
+            <p class="numbering">3</p>
+            <p>Dále vyřeším HlavniController. Potřebuju vyrobit seznam obrázků, resp. seznam názvů souborů s obrázky, který předám Thymeleafu na zpracování.</p>
+            <ol>
+                <li>V metodě zobrazIndex() vytvořím nový držák.
+<pre>
+@RequestMapping("/")
+public ModelAndView zobrazIndex() {
+    <span class="new">ModelAndView drzakNaData = new ModelAndView("index");</span>
+
+    return new ModelAndView("index");
+}
+</pre>
+                </li>
+
+                <li>Vytvořím seznam názvů souboru - List, jehož jednotlivé položky jsou String. Pro větší přehlednost a různé další připojené výhody nebudu pokračovat v psaní kódu uvnitř metody zobrazIndex(), ale vytvořím ve třídě HlavniController pomocnou metodu pro sestavení seznamu. Metoda bude private - slouží jen pro potřeby této třídy a nikdo jiný k ní přistupovat nebude. Návratový typ bude List&lt;String&gt; - chci, aby po zavolání metoda vyplivla připravený seznam.
+                    <pre>
+@RequestMapping("/")
+public ModelAndView zobrazIndex() {
+    <span class="old">ModelAndView drzakNaData = new ModelAndView("index");</span>
+
+    return new ModelAndView("index");
+}
+<span class="new">
+private List&lt;String&gt; vytvorSeznam() {
+    List&lt;String&gt; pomocnySeznam = new ArrayList&lt;&gt;();
+    for (int i = 1; i &lt; 9; i++) {
+        pomocnySeznam.add("man" + i + ".jpg");
+    }
+    return pomocnySeznam;
+}</span>
+</pre>
+                Alternativa: místo vlastní metody, která skládá název z textového řetězce a měnícího se čísla, použiju metodu od Kamila. Na zbytek kódu tato změna nemá vliv - z jiných míst volám stále tu samou metodu vytvorSeznam(), která stále vrací seznam typu List&lt;String&gt;.
+                    <pre>
+@RequestMapping("/")
+public ModelAndView zobrazIndex() {
+    <span class="old">ModelAndView drzakNaData = new ModelAndView("index");</span>
+
+    return new ModelAndView("index");
+}
+<span class="new">
+private List&lt;String&gt; vytvorSeznam() {
+    ResourcePatternResolver prohledavacSlozek = new PathMatchingResourcePatternResolver();
+    Resource[] resources = prohledavacSlozek.getResources("classpath:/static/images/obliceje/*");
+
+    souborySObliceji = new ArrayList<>(resources.length);
+    for (Resource resource : resources) {
+        souborySObliceji.add(resource.getFilename());
+    }
+    return souborySObliceji;
+}</span>
+</pre>
+                    Pokud IDEA hlásí některé třídy jako neznámé (napsané červeně) - umístím dovnitř problematického slova kurzor a kliknu na červenou žárovku na začátku řádku, nebo vyvolám ten samý dialog pomocí Alt+Enter. Z navrhovaných variant řešení vyberu "import class" a IDEA sama doplní na začátek souboru potřebné informace (import + plný kvalifikovaný název třídy, případně název celého balíku).
+                </li>
+                <li>V metodě zobrazIndex() vytvořím proměnnou pro List a přiřadím do ní návratovou hodnotu metody vytvorSeznam(). Tuto proměnnou pak předám držáku jako hodnotu klíče "obliceje".
+                    <pre>
+@RequestMapping("/")
+public ModelAndView zobrazIndex() {
+    <span class="old">ModelAndView drzakNaData = new ModelAndView("index");</span>
+    <span class="new">List&lt;String&gt; seznam = vytvorSeznam();
+    drzakNaData.addObject("obliceje", seznam);
+    //dva radky vyse lze zapsat take kratsim zpusobem jako: drzakNaData.addObject("obliceje", vytvorSeznam());</span>
+
+    return new ModelAndView("index");
+}
+<span class="old">
+private List&lt;String&gt; vytvorSeznam() {
+    List&lt;String&gt; pomocnySeznam = new ArrayList&lt;&gt;();
+    for (int i = 1; i &lt; 9; i++) {
+        pomocnySeznam.add("man" + i + ".jpg");
+    }
+    return pomocnySeznam;
+}</span>
+</pre>
+                </li>
+                <li>Vrátím držák na data jako výstup z metody zobrazIndex().
+                    <pre>
+@RequestMapping("/")
+public ModelAndView zobrazIndex() {
+    <span class="old">ModelAndView drzakNaData = new ModelAndView("index");</span>
+    <span class="old">List&lt;String&gt; seznam = vytvorSeznam();
+    drzakNaData.addObject("obliceje", seznam);
+    //dva radky vyse lze zapsat take kratsim zpusobem jako: drzakNaData.addObject("obliceje", vytvorSeznam());</span>
+
+    <span class="new"><del>return new ModelAndView("index");</del>
+    return drzakNaData;</span>
+}
+<span class="old">
+private List&lt;String&gt; vytvorSeznam() {
+    List&lt;String&gt; pomocnySeznam = new ArrayList&lt;&gt;();
+    for (int i = 1; i &lt; 9; i++) {
+        pomocnySeznam.add("man" + i + ".jpg");
+    }
+    return pomocnySeznam;
+}</span>
+</pre>
+                </li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <p class="numbering">4</p>
+            <p>Vrátím se do index.html a zapíšu th atributy. Momentálně potřebuju dva - th:each, aby se &lt;img&gt; zopakoval pro každou položku ze seznamu a th:src pro zdroj obrázku.</p>
+            <ul>
+                <li>th:each - opakuj pro každou položku ze seznamu "obliceje"
+<pre>&lt;img <span class="new">th:each="oblicej : ${obliceje}"</span> src="../static/images/obliceje/man1.jpg"&gt;
+</pre>
+                </li>
+                <li>th:src - slož cestu k obrázku ze dvou řetězců, "images/obliceje/" a hodnoty uvnitř proměnné "oblicej"</li>
+                <pre>&lt;img th:each="oblicej : ${obliceje}" <span class="new">th:src="'images/obliceje/' + ${oblicej}"</span> src="../static/images/obliceje/man1.jpg"&gt;
+</pre>
+            </ul>
+        </div>
+
+        <div class="step">
+            <p class="numbering">5</p>
+            <p>Pokud nechci, nemusím nic stylovat a nechám vše na výchozích zobrazovacích pravidlech prohlížeče. (Nějaké základní stylování provedu v navazujícím domácím úkolu.)</p>
+            <figure>
+                <figcaption>Výsledný vzhled stránky vzniklé dle tohoto návodu<br>
+                    (počet obrázků v řádku závisí na šířce okna)
+                </figcaption>
+                <img src="images/prequel_screen.png" alt="Project result">
+            </figure>
+
+        </div>
+    </main>
+
+    <footer>
+        Dana Kutálková &copy; 2019
+    </footer>
+
+</body>
+</html>

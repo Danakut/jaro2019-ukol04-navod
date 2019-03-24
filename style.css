@@ -1,0 +1,176 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: #E5DADA;
+}
+
+.header {
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    color: #840032;
+}
+
+h1 {
+    margin-bottom: 0.5rem;
+}
+
+.navmenu {
+    max-width: 1000px;
+    margin: 2rem auto 1rem auto;
+    font-family: 'Raleway', sans-serif;
+    color: #E5DADA;
+    background: #840032;
+}
+
+.navmenu ul {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 0;
+
+}
+
+.navmenu li {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+}
+
+.navmenu a {
+    font-weight: bold;
+    text-decoration: none;
+    color: inherit;
+    text-transform: uppercase;
+}
+
+.navmenu a:hover {
+    background: rgba(2, 4, 15, 0.4);
+}
+
+main {
+    min-width: 350px;
+    max-width: 1000px;
+    margin: 0 auto;
+    font-family: 'Raleway', sans-serif;
+    color: #02040F;
+}
+
+.step {
+    padding: 1rem 1rem 1rem 3rem;
+}
+
+.step p {
+    line-height: 1.2rem;
+}
+
+.numbering {
+    display: flex;
+    align-items: center;
+    margin: 0 0 0 -3rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3rem;
+    color: #E59500;
+}
+
+.numbering::after {
+    content: "";
+    display: inline-block;
+    height: 0.2rem;
+    margin-left: 0.5rem;
+    flex: 1 1 auto;
+    border-top: 0.2rem solid #E59500;
+    border-bottom: 0.2rem solid #E59500;
+}
+
+.step li {
+    margin-bottom: 2rem;
+}
+
+pre {
+    white-space: pre-wrap;       /* css-3 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+    padding: 0.5rem;
+    background: rgba(2, 4, 15, 0.2);
+    border-radius: 3px;
+}
+
+
+.new {
+    color: #F5FFC6;
+}
+
+.old {
+    color: inherit;
+}
+
+figure {
+    margin: 1rem;
+    padding: 1rem;
+}
+
+figure img {
+    width: 100%;
+    border: 1px solid gray;
+}
+
+figcaption {
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+footer {
+    max-width: 1000px;
+    margin: 2rem auto 1rem auto;
+    padding: 0.5rem 1rem;
+    font-family: 'Raleway', sans-serif;
+    text-align: center;
+    color: #E5DADA;
+    background: #840032;
+}
+
+@media (max-width: 1050px) {
+    .numbering {
+        margin-left: -2rem;
+    }
+
+    figure {
+        margin: 1rem 0;
+        padding: 0;
+    }
+}
+
+@media (max-width: 750px) {
+    .navmenu li {
+        font-size: 0.8rem;
+    }
+}
+
+
+
+@media (max-width: 550px){
+    .navmenu ul {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    .navmenu li {
+        flex-basis: 50%;
+    }
+}
+
+@media (max-width: 500px){
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .step {
+        padding: 1rem 0rem;
+    }
+
+    .numbering {
+        margin: 0 0 0 0;
+        font-size: 2rem;
+    }
+}
